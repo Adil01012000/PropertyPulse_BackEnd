@@ -1,15 +1,24 @@
+// authMiddleware.js
+
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
-function verifyToken(req, res, next) {
-const token = req.header('Authorization');
-if (!token) return res.status(401).json({ error: 'Access denied' });
-try {
- const decoded = jwt.verify(token, config.secretKey);
- req.userId = decoded.userId;
- next();
- } catch (error) {
- res.status(401).json({ error: 'Invalid token' });
- }
- };
 
-module.exports = verifyToken;
+const authMiddleware = (req, res, next) => {
+
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: 'Authorization header is missing' });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, config.secretKey, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+    req.user = decoded.user;
+    next();
+  });
+};
+
+module.exports = authMiddleware;
