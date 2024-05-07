@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth_controller');
-const authenticateToken = require('../middleware/authMiddleware'); // Ensure correct import path
+const authenticateToken = require('../middleware/authMiddleware');
 
 router.route("/home").get(authController.home);
 router.route("/register").post(authController.register);
