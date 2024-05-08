@@ -89,4 +89,43 @@ const getPropertyById = async (req, res) => {
     }
 };
 
-module.exports = { createProperty, getProperty, deleteProperty, updateProperty, getPropertyById };
+// GET property to compare api
+const getPropertyToCompare = async (req, res) => {
+    try {
+        const { property_one_id, property_two_id } = req.body;
+
+        if (!property_one_id || !property_two_id) {
+            return res.status(400).json({ message: "Both property IDs are required" });
+        }
+
+        const [propertyOne, propertyTwo] = await Promise.all([
+            Property.findById(property_one_id),
+            Property.findById(property_two_id)
+        ]);
+
+        if (!propertyOne || !propertyTwo) {
+            return res.status(404).json({ message: "One or more properties not found" });
+        }
+
+        res.status(200).json({ propertyOne, propertyTwo });
+    } catch(error) {
+        console.error("Error in getPropertyToCompare:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+// GET property for sale api
+const getPropertyFromType = async (req, res) => {
+    try {
+        const { propertyType } = req.body;
+
+        const properties = await Property.find({ property_purpose: propertyType });
+
+        res.status(200).json({ properties });
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { createProperty, getProperty, deleteProperty, updateProperty, getPropertyById, getPropertyToCompare, getPropertyFromType };
