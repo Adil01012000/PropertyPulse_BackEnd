@@ -8,7 +8,7 @@ router.route("/getProperty").get(getProperty);
 router.route("/deleteProperty").delete(deleteProperty);
 router.route("/updateProperty").put(updateProperty);
 router.route("/getPropertyById").get(getPropertyById);
-router.route("/getPropertyToCompare").get(getPropertyToCompare);
+router.route("/getPropertyToCompare").post(getPropertyToCompare);
 router.route("/getPropertyFromType").get(getPropertyFromType);
 
 module.exports = router;
