@@ -16,10 +16,10 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 1000000
+        fileSize: 1000000000000
     }
 });
 
-router.route("/updateUserProfile").post(upload.single('file'), userProfileController.updateUserProfileUpdate);
+router.route("/updateUserProfile").post(upload.array('file', 4), userProfileController.updateUserProfileUpdate);
 
 module.exports = router;

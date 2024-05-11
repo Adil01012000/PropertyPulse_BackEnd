@@ -4,8 +4,10 @@ const UserProfileModal = require('../models/UserProfile');
 
 async function updateUserProfileUpdate(req, res) {
     try {
+        const profileImages = req.files.map(file => `http://localhost:5000/file/${file.filename}`);
+
         const profileData = {
-            profileImage:  `http://localhost:5000/file/${req.file.filename}` ,
+            profileImage: profileImages, 
             username: req.body.username,
             email: req.body.email,
             phone: req.body.phone,
@@ -20,15 +22,10 @@ async function updateUserProfileUpdate(req, res) {
         };
         const newProfile = new UserProfileModal(profileData);
 
-        // Save the new UserProfile object to the database
         const savedProfile = await newProfile.save();
-
-        // Return a success response with the saved profile object
         return res.json(savedProfile);
     } catch (error) {
-        // Handle any errors that occur during the saving process
         console.error("Error creating profile:", error);
-        // Return an error response
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
