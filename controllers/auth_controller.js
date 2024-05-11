@@ -24,28 +24,33 @@ const home = (req, res) => {
   }
 
 
-const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Missing required fields' });
+  const loginUser = async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+      const passwordMatch = await bcrypt.compare(password, user.password);
+  
+      if (!passwordMatch) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+  
+      const token = jwt.sign(
+        { userId: user._id }, // Include the _id in the token payload
+        config.secretKey,
+        { expiresIn: '1h' }
+      );
+      
+      res.status(200).json({ token, userId: user._id }); // Send _id along with the token
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
-    if (!passwordMatch) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    const token = jwt.sign({ userId: user._id }, config.secretKey, { expiresIn: '1h' });
-    res.status(200).json({ token });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-  }
-
+  }  
   
 const register = async (req, res) => {
   try {

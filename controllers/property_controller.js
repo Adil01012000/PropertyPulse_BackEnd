@@ -128,4 +128,64 @@ const getPropertyFromType = async (req, res) => {
     }
 };
 
-module.exports = { createProperty, getProperty, deleteProperty, updateProperty, getPropertyById, getPropertyToCompare, getPropertyFromType };
+// GET property for sale api
+const getPropertyForSale = async (req, res) => {
+    try {
+
+        const properties = await Property.find({ property_purpose: "propertyForSale" });
+
+        res.status(200).json({ properties_for_sale });
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// GET property for rent api
+const getPropertyForRent = async (req, res) => {
+    try {
+
+        const properties = await Property.find({ property_purpose: "propertyForRent" });
+
+        res.status(200).json({ properties_for_rent });
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// GET land for sale api
+const getLandForSale = async (req, res) => {
+    try {
+
+        const properties = await Property.find({ property_purpose: "landForSale" });
+
+        res.status(200).json({ properties_for_rent });
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// GET property by user id api
+const getPropertyByUserId = async (req, res) => {
+    try {
+        const { user_id } = req.body;
+
+        if (!user_id) {
+            return res.status(400).json({ message: "userID is required." });
+        }
+
+        const properties = await Property.find({ user_id: user_id });
+
+
+        res.status(200).json({ properties });
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+module.exports = { createProperty, getProperty, deleteProperty, updateProperty, getPropertyById, 
+    getPropertyToCompare, getPropertyFromType, getPropertyForSale, getPropertyForRent, getLandForSale, getPropertyByUserId };

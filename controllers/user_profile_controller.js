@@ -7,7 +7,7 @@ async function updateUserProfileUpdate(req, res) {
         const profileImages = req.files.map(file => `http://localhost:5000/profile/${file.filename}`);
 
         const profileData = {
-            profileImage: profileImages, 
+            profileImage:  req.file.filename ,
             username: req.body.username,
             email: req.body.email,
             phone: req.body.phone,

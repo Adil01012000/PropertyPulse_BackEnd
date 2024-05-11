@@ -3,10 +3,13 @@ const crypto = require('crypto');
 const { type } = require('os');
 
 const propertySchema = new mongoose.Schema({
+    user_id: {
+        type: String,
+        required: true,
+    },
     property_title: {
         type: String,
         required: true,
-        unique: true,
     },
     property_description: {
         type: String,
@@ -18,7 +21,7 @@ const propertySchema = new mongoose.Schema({
         required: true,
     },
     property_category: {
-        type: [String],
+        type: String,
         required: true,
     },
     property_listed_in: {
@@ -82,18 +85,8 @@ const propertySchema = new mongoose.Schema({
     property_year_built: {
         type: String,
     },
-    property_available_from: {
-        type: String,
-    },
     property_basement: {
         type: String,
-    },
-    property_structure_type: {
-        type: String,
-    },
-    property_amenities: {
-        type: [String],
-        required: true,
     },
     createdAt: {
         type: Date,
