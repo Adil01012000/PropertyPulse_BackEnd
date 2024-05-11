@@ -20,6 +20,7 @@ const upload = multer({
     }
 });
 
-router.route("/updateUserProfile").post(upload.array('file', 4), userProfileController.updateUserProfileUpdate);
+
+router.route("/updateUserProfile").post(upload.array('profile', 4), userProfileController.updateUserProfileUpdate);
 
 module.exports = router;

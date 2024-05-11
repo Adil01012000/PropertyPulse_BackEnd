@@ -4,7 +4,7 @@ const UserProfileModal = require('../models/UserProfile');
 
 async function updateUserProfileUpdate(req, res) {
     try {
-        const profileImages = req.files.map(file => `http://localhost:5000/file/${file.filename}`);
+        const profileImages = req.files.map(file => `http://localhost:5000/profile/${file.filename}`);
 
         const profileData = {
             profileImage: profileImages, 
