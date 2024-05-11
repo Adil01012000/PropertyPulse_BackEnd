@@ -1,19 +1,96 @@
 const Property = require("../models/Property");
 
-// POST property api
-const createProperty = async (req, res) => {
-    try {
+// // POST property api
+// const createProperty = async (req, res) => {
+//     try {
+//         const propertyData = {
+//             "property_title": "Beautiful Villa with Ocean View",
+//             "property_description": "Spacious villa overlooking the ocean, perfect for a peaceful getaway.",
+//             "property_purpose": "Sale",
+//             "property_category": ["Villa", "Luxury"],
+//             "property_listed_in": "Residential",
+//             "property_price": 1000000,
+//             "property_yearly_tax_rate": "5%",
+//             "property_status": "Available",
+//             "property_after_price_label": "per annum",
+//             "property_address": "123 Ocean Drive",
+//             "property_state": "California",
+//             "property_country": "USA",
+//             "property_city": "Los Angeles",
+//             "property_zip_code": "90001",
+//             "property_size": "5000 sqft",
+//             "property_rooms": "8",
+//             "property_bedrooms": "4",
+//             "property_baths": "3",
+//             "property_garage": "Yes",
+//             "property_garage_size": "2 cars",
+//             "property_year_built": "2010",
+//             "property_available_from": "Immediately",
+//             "property_basement": "No",
+//             "property_structure_type": "Villa",
+//             "property_amenities": ["Swimming Pool", "Garden", "Balcony"]
+//         };
 
-        const property = await Property.create({ ...req.body });
-        res.status(200).json({ message: "Property created successfully", property });
-    } catch(error) {
-        if (error.code === 11000 || error.code ===11001){
-            res.status(400).json({ message: "Duplicate entry. Property already exists." });
-        } else {
-            res.status(500).json({ message: error.message });
+//         const property = await Property.create({ ...req.body });
+//         res.status(200).json({ message: "Property created successfully", property });
+//     } catch(error) {
+//         if (error.code === 11000 || error.code ===11001){
+//             res.status(400).json({ message: "Duplicate entry. Property already exists." });
+//         } else {
+//             res.status(500).json({ message: error.message });
+//         }
+//     }
+// };
+
+async function createProperty(req, res) {
+    try {
+        // Map profile image URLs
+        const profileImages = req.files.map(file => `http://localhost:5000/profile/${file.filename}`);
+        const existingProperty = await Property.findOne({ property_title: req.body.property_title });
+
+        if (existingProperty) {
+            return res.status(400).json({ error: "Property with the same title already exists." });
         }
+        // console.log(profileImages);
+        // Construct profile data
+        const profileData = {
+            property_images: profileImages, // Assuming you want to store multiple images
+            property_title: req.body.property_title, 
+            property_description: req.body.property_description,
+            property_purpose: req.body.property_purpose,
+            property_category: req.body.property_category,
+            property_listed_in: req.body.property_listed_in,
+            property_price: req.body.property_price,
+            property_yearly_tax_rate: req.body.property_yearly_tax_rate,
+            property_status: req.body.property_status,
+            property_after_price_label: req.body.property_after_price_label,
+            property_address: req.body.property_address,
+            property_state: req.body.property_state,
+            property_country: req.body.property_country,
+            property_city: req.body.property_city,
+            property_zip_code: req.body.property_zip_code,
+            property_size: req.body.property_size,
+            property_rooms: req.body.property_rooms,
+            property_bedrooms: req.body.property_bedrooms,
+            property_baths: req.body.property_baths,
+            property_garage: req.body.property_garage,
+            property_garage_size: req.body.property_garage_size,
+            property_year_built: req.body.property_year_built,
+            property_available_from: req.body.property_available_from,
+            property_basement: req.body.property_basement,
+        };
+
+        // Create a new Property object
+        const newProfile = new Property(profileData);
+
+        // Save the profile
+        const savedProfile = await newProfile.save();
+        return res.json(savedProfile);
+    } catch (error) {
+        console.error("Error creating profile:", error);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
-};
+}
 
 // GET property api
 const getProperty = async (req, res) => {

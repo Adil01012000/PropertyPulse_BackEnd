@@ -1,9 +1,24 @@
 const express = require("express");
 const router = express.Router();
+const multer = require('multer');
+const path = require("path");
 
 const { createProperty, getProperty, deleteProperty, updateProperty, getPropertyById, getPropertyToCompare, getPropertyFromType, getPropertyForSale, getPropertyForRent, getLandForSale, getPropertyByUserId } = require("../controllers/property_controller");
+const storage = multer.diskStorage({
+    destination: './uploads/images', // Corrected destination path
+    filename: (req, file, cb) => {
+        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
+    }
+});
 
-router.route("/createProperty").post(createProperty);
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1000000000000
+    }
+});
+
+router.route("/createProperty").post(upload.array('propertyImages', 5), createProperty);
 router.route("/getProperty").get(getProperty);
 router.route("/deleteProperty").delete(deleteProperty);
 router.route("/updateProperty").put(updateProperty);

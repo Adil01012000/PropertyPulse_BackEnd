@@ -3,13 +3,9 @@ const crypto = require('crypto');
 const { type } = require('os');
 
 const propertySchema = new mongoose.Schema({
-    user_id: {
-        type: String,
-        required: true,
-    },
+    property_images: [String],
     property_title: {
         type: String,
-        required: true,
     },
     property_description: {
         type: String,
