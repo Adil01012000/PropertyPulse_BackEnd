@@ -1,60 +1,21 @@
 const Property = require("../models/Property");
 
-// // POST property api
-// const createProperty = async (req, res) => {
-//     try {
-//         const propertyData = {
-//             "property_title": "Beautiful Villa with Ocean View",
-//             "property_description": "Spacious villa overlooking the ocean, perfect for a peaceful getaway.",
-//             "property_purpose": "Sale",
-//             "property_category": ["Villa", "Luxury"],
-//             "property_listed_in": "Residential",
-//             "property_price": 1000000,
-//             "property_yearly_tax_rate": "5%",
-//             "property_status": "Available",
-//             "property_after_price_label": "per annum",
-//             "property_address": "123 Ocean Drive",
-//             "property_state": "California",
-//             "property_country": "USA",
-//             "property_city": "Los Angeles",
-//             "property_zip_code": "90001",
-//             "property_size": "5000 sqft",
-//             "property_rooms": "8",
-//             "property_bedrooms": "4",
-//             "property_baths": "3",
-//             "property_garage": "Yes",
-//             "property_garage_size": "2 cars",
-//             "property_year_built": "2010",
-//             "property_available_from": "Immediately",
-//             "property_basement": "No",
-//             "property_structure_type": "Villa",
-//             "property_amenities": ["Swimming Pool", "Garden", "Balcony"]
-//         };
-
-//         const property = await Property.create({ ...req.body });
-//         res.status(200).json({ message: "Property created successfully", property });
-//     } catch(error) {
-//         if (error.code === 11000 || error.code ===11001){
-//             res.status(400).json({ message: "Duplicate entry. Property already exists." });
-//         } else {
-//             res.status(500).json({ message: error.message });
-//         }
-//     }
-// };
-
 async function createProperty(req, res) {
     try {
-        // Map profile image URLs
-        const profileImages = req.files.map(file => `http://localhost:5000/profile/${file.filename}`);
+        // const profileImages = req.files.map(file => `http://localhost:5000/profile/${file.filename}`);
         const existingProperty = await Property.findOne({ property_title: req.body.property_title });
 
         if (existingProperty) {
             return res.status(400).json({ error: "Property with the same title already exists." });
         }
-        // console.log(profileImages);
-        // Construct profile data
         const profileData = {
-            property_images: profileImages, // Assuming you want to store multiple images
+            // property_images: profileImages, 
+            property_image_one: req.body.property_image_one,
+            property_image_two: req.body.property_image_two,
+            property_image_three: req.body.property_image_three,
+            property_image_four: req.body.property_image_four,
+            property_image_five: req.body.property_image_five,
+            property_user_id: req.body.user_id,
             property_title: req.body.property_title, 
             property_description: req.body.property_description,
             property_purpose: req.body.property_purpose,
@@ -80,10 +41,8 @@ async function createProperty(req, res) {
             property_basement: req.body.property_basement,
         };
 
-        // Create a new Property object
         const newProfile = new Property(profileData);
 
-        // Save the profile
         const savedProfile = await newProfile.save();
         return res.json(savedProfile);
     } catch (error) {
@@ -211,7 +170,7 @@ const getPropertyForSale = async (req, res) => {
 
         const properties = await Property.find({ property_purpose: "propertyForSale" });
 
-        res.status(200).json({ properties_for_sale });
+        res.status(200).json({ properties });
     } catch(error) {
         console.error(error);
         res.status(500).json({ message: error.message });
@@ -224,7 +183,7 @@ const getPropertyForRent = async (req, res) => {
 
         const properties = await Property.find({ property_purpose: "propertyForRent" });
 
-        res.status(200).json({ properties_for_rent });
+        res.status(200).json({ properties });
     } catch(error) {
         console.error(error);
         res.status(500).json({ message: error.message });
@@ -237,7 +196,7 @@ const getLandForSale = async (req, res) => {
 
         const properties = await Property.find({ property_purpose: "landForSale" });
 
-        res.status(200).json({ properties_for_rent });
+        res.status(200).json({ properties });
     } catch(error) {
         console.error(error);
         res.status(500).json({ message: error.message });
@@ -253,7 +212,7 @@ const getPropertyByUserId = async (req, res) => {
             return res.status(400).json({ message: "userID is required." });
         }
 
-        const properties = await Property.find({ user_id: user_id });
+        const properties = await Property.find({ property_user_id: user_id });
 
 
         res.status(200).json({ properties });
