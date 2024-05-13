@@ -2,14 +2,14 @@ const Property = require("../models/Property");
 
 async function createProperty(req, res) {
     try {
-        // const profileImages = req.files.map(file => `http://localhost:5000/profile/${file.filename}`);
+        const profileImages = req.files.map(file => `http://localhost:5000/profile/${file.filename}`);
         const existingProperty = await Property.findOne({ property_title: req.body.property_title });
 
         if (existingProperty) {
             return res.status(400).json({ error: "Property with the same title already exists." });
         }
         const profileData = {
-            // property_images: profileImages, 
+            property_images: profileImages, 
             property_image_one: req.body.property_image_one,
             property_image_two: req.body.property_image_two,
             property_image_three: req.body.property_image_three,

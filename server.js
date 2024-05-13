@@ -9,11 +9,13 @@ const profile = require("./routes/userProfile_router");
 const PORT = process.env.PORT || 5000;
 const connectDB = require("./db/connect");
 const cors = require('cors');
+// const fileUpload = require('express-fileupload');
 app.use(express.json());
 const path = require('path');
 // app.use(express.static('uploads/images'));
 
 app.use(cors()); 
+// app.use(fileUpload());
 app.use("/api/auth", router);
 app.use("/api/property", prop);
 app.use("/api/contact", contact);
