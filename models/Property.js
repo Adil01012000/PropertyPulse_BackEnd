@@ -3,22 +3,22 @@ const crypto = require('crypto');
 const { type } = require('os');
 
 const propertySchema = new mongoose.Schema({
-    property_images: [String],
-    // property_image_one: {
-    //     type: String,
-    // },
-    // property_image_two: {
-    //     type: String,
-    // },
-    // property_image_three: {
-    //     type: String,
-    // },
-    // property_image_four: {
-    //     type: String,
-    // },
-    // property_image_five: {
-    //     type: String,
-    // },
+    // property_images: [String],
+    property_image_one: {
+        type: String,
+    },
+    property_image_two: {
+        type: String,
+    },
+    property_image_three: {
+        type: String,
+    },
+    property_image_four: {
+        type: String,
+    },
+    property_image_five: {
+        type: String,
+    },
     property_user_id: {
         type: String,
     },
